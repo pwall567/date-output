@@ -21,8 +21,13 @@ class and the later `java.time.` classes), optimised for the least possible obje
 
 ## Usage
 
-The functions all append to an `Appendable` &ndash; this can be `Writer` to write directly to an output stream, or a
-`StringBuilder` to build an output message in memory.
+There are versions of the functions to append to an `Appendable` or to output using an `IntConsumer` lambda.
+The `Appendable` can be `Writer` to write directly to an output stream, or a `StringBuilder` to build an output message
+in memory, or any other implementation of `Appendable`.
+The `IntConsumer` can be any function that accepts characters (as `int`) one at a time.
+
+The functions using an `Appendable` are shown here; each of them has an equivalent which takes an `IntConsumer` as the
+second parameter, with the value to be converted in the first parameter position.
 
 To output a `Date` (the earlier Java data class - this class does not include time zone information so UTC+00:00 will be
 assumed):
@@ -126,6 +131,9 @@ While the `java.time.` classes allow nanosecond precision, in practice most uses
 When outputting fractional seconds, the functions will output 3, 6 or 9 decimal places as necessary (but not any other
 number of places), following the example of the `toString()` functions of the standard classes.
 
+Also following the lead of the standard classes, the fractional part (and the decimal point) will be omitted if it is
+zero.
+
 ### Safe Output
 
 The output will contain only the characters specified in the RFC 3339 specification, that is, the digits 0 to 9, slash,
@@ -138,27 +146,35 @@ The `ZonedDateTime` class includes a time zone name, but there is no provision f
 The library includes an `appendZonedDateTime()` function, but the output is the same as for `OffsetDateTime` &ndash; the
 zone name will not be output.
 
+### Range of Years
+
+The functions are expected to be used mainly on dates in the modern era, that is, dates in the 20th and 21st centuries.
+Any date from the introduction of the Gregorian calendar up to the year 9999CE will be output correctly, but dates in
+the BCE range will be output without a sign, and absolute year values of more than 4 digits will be output as 9999.
+
+This information is likely to be of interest only to testers who like to feed outrageous values into systems under test.
+
 ## Dependency Specification
 
-The latest version of the library is 1.0, and it may be obtained from the Maven Central repository.
+The latest version of the library is 1.1, and it may be obtained from the Maven Central repository.
 
 ### Maven
 ```xml
     <dependency>
       <groupId>net.pwall.util</groupId>
       <artifactId>date-output</artifactId>
-      <version>1.0</version>
+      <version>1.1</version>
     </dependency>
 ```
 ### Gradle
 ```groovy
-    implementation 'net.pwall.util:date-output:1.0'
+    implementation 'net.pwall.util:date-output:1.1'
 ```
 ### Gradle (kts)
 ```kotlin
-    implementation("net.pwall.util:date-output:1.0")
+    implementation("net.pwall.util:date-output:1.1")
 ```
 
 Peter Wall
 
-2022-04-10
+2022-05-04
