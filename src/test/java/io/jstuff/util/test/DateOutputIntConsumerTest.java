@@ -1,5 +1,5 @@
 /*
- * @(#) DateOutputAppendableTest.java
+ * @(#) DateOutputIntConsumerTest.java
  *
  * date-output  Date output functions
  * Copyright (c) 2022 Peter Wall
@@ -23,9 +23,8 @@
  * SOFTWARE.
  */
 
-package net.pwall.util.test;
+package io.jstuff.util.test;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,25 +39,28 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.function.IntConsumer;
 
+import io.jstuff.util.DateOutput;
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 
-import net.pwall.util.DateOutput;
-
-public class DateOutputAppendableTest {
+public class DateOutputIntConsumerTest {
 
     @Test
-    public void shouldConvertDate() throws IOException {
+    public void shouldConvertDateUsingLambda() {
         StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
         Instant instant = OffsetDateTime.of(2022, 4, 8, 18, 39, 2, 456_000_000, ZoneOffset.UTC).toInstant();
-        DateOutput.appendDate(sb, Date.from(instant));
+        DateOutput.outputDate(Date.from(instant), ic);
         assertEquals("2022-04-08T18:39:02.456Z", sb.toString());
     }
 
     @Test
-    public void shouldConvertCalendar() throws IOException {
+    public void shouldConvertCalendarUsingLambda() {
         StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, 2022);
         calendar.set(Calendar.MONTH, 3);
@@ -68,120 +70,130 @@ public class DateOutputAppendableTest {
         calendar.set(Calendar.SECOND, 2);
         calendar.set(Calendar.MILLISECOND, 456);
         calendar.set(Calendar.ZONE_OFFSET, 10 * 60 * 60 * 1000);
-        DateOutput.appendCalendar(sb, calendar);
+        DateOutput.outputCalendar(calendar, ic);
         assertEquals("2022-04-08T18:39:02.456+10:00", sb.toString());
     }
 
     @Test
-    public void shouldConvertInstant() throws IOException {
+    public void shouldConvertInstantUsingLambda() {
         StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
         LocalDateTime localDateTime = LocalDateTime.parse("2022-04-07T18:32:47.12");
         OffsetDateTime offsetDateTime = OffsetDateTime.of(localDateTime, ZoneOffset.ofHours(10));
         Instant instant = offsetDateTime.toInstant();
-        DateOutput.appendInstant(sb, instant);
+        DateOutput.outputInstant(instant, ic);
         assertEquals("2022-04-07T08:32:47.120Z", sb.toString());
     }
 
     @Test
-    public void shouldConvertZonedDateTime() throws IOException {
+    public void shouldConvertZonedDateTimeUsingLambda() {
         StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
         LocalDateTime localDateTime = LocalDateTime.parse("2022-04-07T18:32:47.55");
         ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.of("Australia/Sydney"));
-        DateOutput.appendZonedDateTime(sb, zonedDateTime);
+        DateOutput.outputZonedDateTime(zonedDateTime, ic);
         assertEquals("2022-04-07T18:32:47.550+10:00", sb.toString());
     }
 
     @Test
-    public void shouldConvertOffsetDateTime() throws IOException {
+    public void shouldConvertOffsetDateTimeUsingLambda() {
         StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
         LocalDateTime localDateTime = LocalDateTime.parse("2022-04-07T18:32:47.5446");
         OffsetDateTime offsetDateTime = OffsetDateTime.of(localDateTime, ZoneOffset.ofHours(10));
-        DateOutput.appendOffsetDateTime(sb, offsetDateTime);
+        DateOutput.outputOffsetDateTime(offsetDateTime, ic);
         assertEquals("2022-04-07T18:32:47.544600+10:00", sb.toString());
         sb.setLength(0);
         localDateTime = LocalDateTime.of(1999, 6, 1, 9, 15, 10, 456_000_000);
         offsetDateTime = OffsetDateTime.of(localDateTime, ZoneOffset.UTC);
-        DateOutput.appendOffsetDateTime(sb, offsetDateTime);
+        DateOutput.outputOffsetDateTime(offsetDateTime, ic);
         assertEquals("1999-06-01T09:15:10.456Z", sb.toString());
     }
 
     @Test
-    public void shouldConvertOffsetTime() throws IOException {
+    public void shouldConvertOffsetTimeUsingLambda() {
         StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
         OffsetTime offsetTime = OffsetTime.of(8, 27, 55, 544_233_100, ZoneOffset.ofHours(-5));
-        DateOutput.appendOffsetTime(sb, offsetTime);
+        DateOutput.outputOffsetTime(offsetTime, ic);
         assertEquals("08:27:55.544233100-05:00", sb.toString());
     }
 
     @Test
-    public void shouldConvertLocalDateTime() throws IOException {
+    public void shouldConvertLocalDateTimeUsingLambda() {
         StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
         LocalDateTime dateTime = LocalDateTime.parse("2022-04-07T18:32:47.544");
-        DateOutput.appendLocalDateTime(sb, dateTime);
+        DateOutput.outputLocalDateTime(dateTime, ic);
         assertEquals("2022-04-07T18:32:47.544", sb.toString());
         sb.setLength(0);
         dateTime = LocalDateTime.parse("1999-04-01T08:45");
-        DateOutput.appendLocalDateTime(sb, dateTime);
+        DateOutput.outputLocalDateTime(dateTime, ic);
         assertEquals("1999-04-01T08:45:00", sb.toString());
     }
 
     @Test
-    public void shouldConvertLocalDate() throws IOException {
+    public void shouldConvertLocalDateUsingLambda() {
         StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
         LocalDate date = LocalDate.of(2022, 4, 7);
-        DateOutput.appendLocalDate(sb, date);
+        DateOutput.outputLocalDate(date, ic);
         assertEquals("2022-04-07", sb.toString());
         sb.setLength(0);
         date = LocalDate.parse("1999-12-31");
-        DateOutput.appendLocalDate(sb, date);
+        DateOutput.outputLocalDate(date, ic);
         assertEquals("1999-12-31", sb.toString());
         sb.setLength(0);
-        DateOutput.appendLocalDate(sb, date.plusDays(1));
+        DateOutput.outputLocalDate(date.plusDays(1), ic);
         assertEquals("2000-01-01", sb.toString());
     }
 
     @Test
-    public void shouldConvertLocalTime() throws IOException {
+    public void shouldConvertLocalTimeUsingLambda() {
         StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
         LocalTime time = LocalTime.of(14, 3, 0);
-        DateOutput.appendLocalTime(sb, time);
+        DateOutput.outputLocalTime(time, ic);
         assertEquals("14:03:00", sb.toString());
         sb.setLength(0);
         time = LocalTime.parse("09:31:27");
-        DateOutput.appendLocalTime(sb, time);
+        DateOutput.outputLocalTime(time, ic);
         assertEquals("09:31:27", sb.toString());
         sb.setLength(0);
-        DateOutput.appendLocalTime(sb, time.withNano(230000000));
+        DateOutput.outputLocalTime(time.withNano(230000000), ic);
         assertEquals("09:31:27.230", sb.toString());
         sb.setLength(0);
-        DateOutput.appendLocalTime(sb, time.withNano(234500000));
+        DateOutput.outputLocalTime(time.withNano(234500000), ic);
         assertEquals("09:31:27.234500", sb.toString());
         sb.setLength(0);
-        DateOutput.appendLocalTime(sb, time.withNano(234567890));
+        DateOutput.outputLocalTime(time.withNano(234567890), ic);
         assertEquals("09:31:27.234567890", sb.toString());
     }
 
     @Test
-    public void shouldConvertYear() throws IOException {
+    public void shouldConvertYearUsingLambda() {
         StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
         Year year = Year.of(2022);
-        DateOutput.appendYear(sb, year);
+        DateOutput.outputYear(year, ic);
         assertEquals("2022", sb.toString());
     }
 
     @Test
-    public void shouldConvertYearMonth() throws IOException {
+    public void shouldConvertYearMonthUsingLambda() {
         StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
         YearMonth yearMonth = YearMonth.of(2022, 4);
-        DateOutput.appendYearMonth(sb, yearMonth);
+        DateOutput.outputYearMonth(yearMonth, ic);
         assertEquals("2022-04", sb.toString());
     }
 
     @Test
-    public void shouldConvertMonthDay() throws IOException {
+    public void shouldConvertMonthDayUsingLambda() {
         StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
         MonthDay monthDay = MonthDay.of(4, 8);
-        DateOutput.appendMonthDay(sb, monthDay);
+        DateOutput.outputMonthDay(monthDay, ic);
         assertEquals("--04-08", sb.toString());
     }
 

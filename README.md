@@ -1,8 +1,8 @@
 # date-output
 
-[![Build Status](https://travis-ci.com/pwall567/date-output.svg?branch=main)](https://app.travis-ci.com/github/pwall567/date-output)
+[![Build Status](https://github.com/pwall567/date-output/actions/workflows/build.yml/badge.svg)](https://github.com/pwall567/date-output/actions/workflows/build.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Maven Central](https://img.shields.io/maven-central/v/net.pwall.util/date-output?label=Maven%20Central)](https://search.maven.org/search?q=g:%22net.pwall.util%22%20AND%20a:%22date-output%22)
+[![Maven Central](https://img.shields.io/maven-central/v/io.jstuff/date-output?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.jstuff%22%20AND%20a:%22date-output%22)
 
 Static functions for optimised date/time output
 
@@ -156,25 +156,25 @@ This information is likely to be of interest only to testers who like to feed ou
 
 ## Dependency Specification
 
-The latest version of the library is 1.3, and it may be obtained from the Maven Central repository.
+The latest version of the library is 2.0, and it may be obtained from the Maven Central repository.
 
 ### Maven
 ```xml
     <dependency>
-      <groupId>net.pwall.util</groupId>
+      <groupId>io.jstuff</groupId>
       <artifactId>date-output</artifactId>
-      <version>1.3</version>
+      <version>2.0</version>
     </dependency>
 ```
 ### Gradle
 ```groovy
-    implementation 'net.pwall.util:date-output:1.3'
+    implementation 'io.jstuff:date-output:2.0'
 ```
 ### Gradle (kts)
 ```kotlin
-    implementation("net.pwall.util:date-output:1.3")
+    implementation("io.jstuff:date-output:2.0")
 ```
 
 Peter Wall
 
-2023-12-02
+2025-01-29

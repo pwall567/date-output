@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-package net.pwall.util;
+package io.jstuff.util;
 
 import java.io.IOException;
 import java.time.Instant;
